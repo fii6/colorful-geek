@@ -2,7 +2,7 @@
 // Mirrors Hexo's _config.yml + themes/colorful-geek/_config.yml.
 
 export const siteConfig = {
-  url: 'https://example.com',
+  url: 'https://ericlee.pages.dev',
   title: 'Colorful Geek',
   subtitle: 'A terminal-style blog',
   description: 'GitHub Dark terminal-style Astro blog theme',
@@ -46,18 +46,18 @@ export const themeConfig = {
     username: 'Eric Lee',
     bio: '我是风，自由的风。',
     social: {
-      twitter: 'https://twitter.com/x_ericlee',
-      telegram: 'https://t.me/ericlee',
+      twitter: 'https://x.com/x_ericlee',
+      telegram: 'https://t.me/null',
       email: 'mailto:ericlee@outlook.be',
     },
   },
 
   post: {
-    toc: true,
+    toc: false,
     toc_max_depth: 3,
     reading_progress: true,
-    reading_time: true,
-    word_count: true,
+    reading_time: false,
+    word_count: false,
     copy_code: true,
     related_posts: 5,
     show_updated: true,
@@ -95,7 +95,7 @@ export const themeConfig = {
   },
 
   appearance: {
-    default_mode: 'dark', // 'dark' | 'light'
+    default_mode: 'light', // 'dark' | 'light'
     toggle: true,
     font_mono: '"JetBrains Mono", "Fira Code", "SFMono-Regular", "Menlo", "Consolas", monospace',
     font_sans: '"Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif',
