@@ -7,8 +7,8 @@ tags:
   - 图床
   - 写作流
 description: "从安装、配置到验证，完整打通 CFBed Upload Skill 与 Hexo 写作流。"
-cover: "https://myimgbed.pages.dev/file/cfbed-flow.svg"
-top_img: "https://myimgbed.pages.dev/file/cfbed-terminal-verify.svg"
+cover: "https://myimgbed.pages.dev/file/1778583179189_2.png"
+top_img: "https://myimgbed.pages.dev/file/1778583179189_2.png"
 published: true
 ---
 
