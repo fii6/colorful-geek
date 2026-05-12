@@ -1,0 +1,45 @@
+---
+import BaseLayout from '~/layouts/BaseLayout.astro';
+import { getPublishedPosts, postPath, formatDate, isoDate } from '~/lib/posts.js';
+import { t } from '~/lib/i18n.js';
+
+const posts = await getPublishedPosts();
+
+const groups: Array<{ year: string; posts: any[] }> = [];
+let cur: { year: string; posts: any[] } | null = null;
+for (const post of posts) {
+  const y = String(new Date(post.data.date).getFullYear());
+  if (!cur || cur.year !== y) {
+    cur = { year: y, posts: [] };
+    groups.push(cur);
+  }
+  cur.posts.push(post);
+}
+---
+<BaseLayout pageType="archive" title={t('archive.title')}>
+  <section class="archive">
+    <header class="archive-header">
+      <h1 class="archive-title">{t('archive.title')}</h1>
+      <span class="archive-count">{posts.length} {t('archive.count')}</span>
+    </header>
+
+    <div class="timeline">
+      {groups.map((g) => (
+        <>
+          <div class="timeline-year"><span class="year-num">{g.year}</span></div>
+          {g.posts.map((post) => {
+            const d = new Date(post.data.date);
+            const mm = String(d.getMonth() + 1).padStart(2, '0');
+            const dd = String(d.getDate()).padStart(2, '0');
+            return (
+              <div class="timeline-item">
+                <time class="timeline-date" datetime={isoDate(post.data.date)}>{`${mm}-${dd}`}</time>
+                <a class="timeline-link" href={postPath(post)}>{post.data.title}</a>
+              </div>
+            );
+          })}
+        </>
+      ))}
+    </div>
+  </section>
+</BaseLayout>

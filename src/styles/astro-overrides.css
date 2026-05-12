@@ -1,0 +1,145 @@
+/* ─── Expressive Code (Fuwari-style code blocks) ──────────────────────── */
+.post-body .expressive-code {
+  margin: 1em 0;
+}
+.post-body .expressive-code ::selection {
+  background: var(--codeblock-selection);
+}
+
+/* Narrow the line-number gutter — default padding-inline is 2ch on both
+   sides (≈6ch wide). Keep min-width tied to the plugin's --lnWidth so the
+   right edge stays aligned across 1- and 2-digit line numbers. */
+.post-body .expressive-code .gutter .ln {
+  padding-inline: 0.5ch 1ch;
+  min-width: var(--lnWidth, 2ch);
+}
+
+/* Copy button (rendered by pluginCustomCopyButton) */
+.post-body .copy-btn {
+  all: initial;
+  position: absolute;
+  top: 0.6rem;
+  right: 0.6rem;
+  width: 2rem;
+  height: 2rem;
+  border-radius: 0.5rem;
+  background: var(--codeblock-topbar-bg);
+  border: 1px solid var(--code-border);
+  color: var(--code-fg);
+  cursor: pointer;
+  z-index: 20;
+  opacity: 0;
+  transition: opacity 200ms ease, transform 120ms ease, background 200ms ease,
+              border-color 200ms ease;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.35);
+}
+.post-body .copy-btn:hover {
+  background: var(--code-gutter-bg);
+  border-color: var(--accent-fg);
+}
+.post-body .copy-btn:active {
+  transform: scale(0.92);
+}
+.post-body .frame:hover .copy-btn,
+.post-body .expressive-code:focus-within .copy-btn {
+  opacity: 1;
+}
+@media (hover: none) {
+  .post-body .copy-btn { opacity: 1; }
+}
+
+.post-body .copy-btn-icon {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 1rem;
+  height: 1rem;
+  pointer-events: none;
+  transition: opacity 200ms ease, fill 200ms ease;
+}
+.post-body .copy-btn .copy-icon {
+  opacity: 1;
+  fill: var(--code-fg);
+}
+.post-body .copy-btn .success-icon {
+  opacity: 0;
+  fill: var(--success-fg);
+}
+.post-body .copy-btn.success .copy-icon {
+  opacity: 0;
+}
+.post-body .copy-btn.success .success-icon {
+  opacity: 1;
+}
+.post-body .copy-btn.success {
+  border-color: var(--success-fg);
+}
+
+/* ─── Plain (non-EC) fenced blocks fallback ──────────────────────────── */
+.post-body pre.astro-code,
+.post-body pre.shiki {
+  position: relative;
+  margin: 1em 0;
+  padding: 12px 14px;
+  background: var(--codeblock-bg) !important;
+  border: 1px solid var(--code-border);
+  border-radius: 0.75rem;
+  overflow-x: auto;
+  font-family: var(--font-mono);
+  font-size: 0.875rem;
+  line-height: 1.5rem;
+}
+.post-body pre.astro-code code,
+.post-body pre.shiki code {
+  background: transparent;
+  border: 0;
+  padding: 0;
+  color: inherit;
+  font-size: inherit;
+  display: block;
+}
+
+/* ─── GitHub-style callouts produced by remark-github-blockquote-alert ── */
+.post-body .markdown-alert {
+  margin: 1.4em 0;
+  padding: 14px 18px;
+  border-left: 3px solid var(--callout-color, var(--accent-fg));
+  background: color-mix(in srgb, var(--callout-color, var(--accent-fg)) 8%, var(--bg-default));
+  border-radius: 0 var(--radius-base) var(--radius-base) 0;
+  color: var(--fg-default);
+}
+.post-body .markdown-alert p {
+  margin: 0.4em 0;
+}
+.post-body .markdown-alert > :first-child {
+  margin-top: 0;
+}
+.post-body .markdown-alert > :last-child {
+  margin-bottom: 0;
+}
+.post-body .markdown-alert-title {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 6px;
+  font-weight: 700;
+  font-size: 13px;
+  letter-spacing: 0.02em;
+  color: var(--callout-color, var(--accent-fg));
+  text-transform: capitalize;
+}
+.post-body .markdown-alert-title svg {
+  flex-shrink: 0;
+  fill: currentColor;
+}
+.post-body .markdown-alert-note { --callout-color: var(--accent-fg); }
+.post-body .markdown-alert-tip { --callout-color: var(--success-fg); }
+.post-body .markdown-alert-important { --callout-color: var(--done-fg); }
+.post-body .markdown-alert-warning { --callout-color: var(--warning-fg); }
+.post-body .markdown-alert-caution { --callout-color: var(--danger-fg); }
+
+/* ─── Pagefind UI tweaks ──────────────────────────────────────────────── */
+.pagefind-ui form {
+  display: none;
+}

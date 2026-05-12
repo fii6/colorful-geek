@@ -1,0 +1,28 @@
+---
+import BaseLayout from '~/layouts/BaseLayout.astro';
+import { t } from '~/lib/i18n.js';
+const t404 = t('error.404');
+---
+<BaseLayout pageType="404" title={t404.title}>
+  <section class="error-page">
+    <div class="error-art">
+      <pre>{`   ____  __ __
+  |  _ \\/  |  | _____
+  | | | || || | / _ \\\\
+  |_| |_||_||_|/_/ \\_\\\\`}</pre>
+    </div>
+    <div class="error-line">
+      <span class="prompt">$</span>
+      <span>cat {Astro.url.pathname || 'unknown'}</span>
+    </div>
+    <div class="error-message">
+      cat: {Astro.url.pathname || 'unknown'}: No such file or directory
+    </div>
+    <div class="error-hint">{t404.message}</div>
+    <div class="error-actions">
+      <a class="btn-cmd" href="/">
+        <span class="prompt">$</span> {t404.home}
+      </a>
+    </div>
+  </section>
+</BaseLayout>

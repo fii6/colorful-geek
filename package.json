@@ -1,0 +1,31 @@
+{
+  "name": "theme-colorful-geek-astro",
+  "type": "module",
+  "version": "0.1.0",
+  "private": true,
+  "description": "GitHub Dark terminal-style Astro blog theme — port of the Hexo colorful-geek theme.",
+  "scripts": {
+    "dev": "astro dev",
+    "start": "astro dev",
+    "build": "astro build && pagefind --site dist",
+    "build:site": "astro build",
+    "index": "pagefind --site dist",
+    "preview": "astro preview",
+    "astro": "astro"
+  },
+  "dependencies": {
+    "@astrojs/mdx": "^4.0.0",
+    "@astrojs/rss": "^4.0.7",
+    "@astrojs/sitemap": "^3.2.1",
+    "@expressive-code/core": "^0.41.0",
+    "@expressive-code/plugin-collapsible-sections": "^0.41.0",
+    "@expressive-code/plugin-line-numbers": "^0.41.0",
+    "astro": "^5.0.0",
+    "astro-expressive-code": "^0.41.0",
+    "js-yaml": "^4.1.0",
+    "pagefind": "^1.1.1",
+    "rehype-autolink-headings": "^7.1.0",
+    "rehype-slug": "^6.0.0",
+    "remark-github-blockquote-alert": "^1.3.0"
+  }
+}

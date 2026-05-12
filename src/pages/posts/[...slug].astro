@@ -1,0 +1,89 @@
+---
+import BaseLayout from '~/layouts/BaseLayout.astro';
+import License from '~/components/License.astro';
+import Reward from '~/components/Reward.astro';
+import { render } from 'astro:content';
+import { themeConfig, siteConfig } from '~/lib/site-config.js';
+import { t } from '~/lib/i18n.js';
+import {
+  getPublishedPosts,
+  postPath,
+  postSlug,
+  formatDate,
+  isoDate,
+  stripHtml,
+} from '~/lib/posts.js';
+
+export async function getStaticPaths() {
+  const posts = await getPublishedPosts();
+  return posts.map((post, i) => ({
+    params: { slug: postSlug(post) },
+    props: {
+      post,
+      prev: posts[i + 1] || null,
+      next: posts[i - 1] || null,
+    },
+  }));
+}
+
+const { post, prev, next } = Astro.props;
+const { Content } = await render(post);
+
+const data = post.data;
+const cover = data.cover || data.top_img || data.thumbnail;
+const showUpdated =
+  themeConfig.post?.show_updated &&
+  data.updated &&
+  new Date(data.updated).toISOString() !== new Date(data.date).toISOString();
+
+const bodyText = stripHtml(post.body || '');
+---
+<BaseLayout
+  pageType="post"
+  title={data.title}
+  description={data.description || bodyText.slice(0, 160)}
+  cover={cover}
+  keywords={(Array.isArray(data.tags) ? data.tags : data.tags ? [data.tags] : []).join(',')}
+>
+  <article class="post post-single" itemscope itemtype="https://schema.org/BlogPosting">
+    <header class="post-header">
+      <h1 class="post-title" itemprop="name headline">{data.title}</h1>
+      <div class="post-meta">
+        <time itemprop="datePublished" datetime={isoDate(data.date)}>
+          <span class="meta-key">{t('post.posted')}:</span> {formatDate(data.date)}
+        </time>
+        {showUpdated && (
+          <time itemprop="dateModified" datetime={isoDate(data.updated)}>
+            <span class="meta-key">{t('post.updated')}:</span> {formatDate(data.updated)}
+          </time>
+        )}
+      </div>
+    </header>
+
+    <div class="post-body" itemprop="articleBody">
+      <Content />
+    </div>
+
+    <footer class="post-footer">
+      {(prev || next) && (
+        <nav class="post-nav">
+          {prev && (
+            <a class="post-nav-prev" href={postPath(prev)}>
+              <div class="post-nav-label">← {t('post.prev')}</div>
+              <div class="post-nav-title">{prev.data.title}</div>
+            </a>
+          )}
+          {next && (
+            <a class="post-nav-next" href={postPath(next)}>
+              <div class="post-nav-label">{t('post.next')} →</div>
+              <div class="post-nav-title">{next.data.title}</div>
+            </a>
+          )}
+        </nav>
+      )}
+    </footer>
+
+    <License post={post} />
+    <Reward post={post} />
+  </article>
+</BaseLayout>

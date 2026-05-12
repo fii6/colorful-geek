@@ -1,0 +1,30 @@
+---
+import BaseLayout from '~/layouts/BaseLayout.astro';
+import PostCard from '~/components/PostCard.astro';
+import Pagination from '~/components/Pagination.astro';
+import { siteConfig } from '~/lib/site-config.js';
+import { getPublishedPosts } from '~/lib/posts.js';
+
+const perPage = siteConfig.per_page || 10;
+const all = await getPublishedPosts();
+const firstPage = all.slice(0, perPage);
+const totalPages = Math.max(1, Math.ceil(all.length / perPage));
+
+// Synthesize a `page` object shape compatible with our Pagination component.
+const page = {
+  currentPage: 1,
+  lastPage: totalPages,
+  url: {
+    prev: undefined as string | undefined,
+    next: totalPages > 1 ? '/page/2/' : undefined,
+  },
+};
+---
+<BaseLayout pageType="home">
+  <div class="post-list" data-pagefind-ignore>
+    {firstPage.map((post: any, idx: number) => (
+      <PostCard post={post} idx={idx} />
+    ))}
+  </div>
+  <Pagination page={page} />
+</BaseLayout>

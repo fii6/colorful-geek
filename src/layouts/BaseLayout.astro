@@ -1,0 +1,87 @@
+---
+import { themeConfig } from '~/lib/site-config.js';
+import Head from '~/components/Head.astro';
+import Header from '~/components/Header.astro';
+import Footer from '~/components/Footer.astro';
+import Sidebar from '~/components/Sidebar.astro';
+import SearchOverlay from '~/components/SearchOverlay.astro';
+import ReadingProgress from '~/components/ReadingProgress.astro';
+
+export interface Props {
+  title?: string;
+  description?: string;
+  pageType?: 'home' | 'post' | 'page' | 'archive' | 'category' | 'tag' | 'tags' | 'categories' | '404' | 'links';
+  keywords?: string;
+  cover?: string;
+  canonical?: string;
+}
+
+const { title, description, pageType = 'page', keywords, cover, canonical } = Astro.props;
+
+const sb = themeConfig.sidebar || {};
+const sbShowOn = sb.show_on || ['home', 'post', 'page', 'archive', 'category', 'tag'];
+const sidebarVisible = sb.enable && sbShowOn.includes(pageType);
+const sbPos = sb.position || 'right';
+const back = themeConfig.back_to_top || {};
+const backEnable = back.enable !== false;
+const backThreshold = Number.isFinite(back.threshold) ? back.threshold : 320;
+const post = themeConfig.post || {};
+const search = themeConfig.search || {};
+---
+<!DOCTYPE html>
+<html lang={themeConfig.appearance?.default_mode ? undefined : undefined} data-theme={themeConfig.appearance?.default_mode || 'dark'}>
+  <Head title={title} description={description} pageType={pageType} keywords={keywords} cover={cover} canonical={canonical} />
+  <body
+    data-copy-code={post.copy_code !== false ? '1' : '0'}
+    data-external-link={post.external_link ? '1' : '0'}
+    data-callouts={post.callouts !== false ? '1' : '0'}
+    data-lang-badge={post.lang_badge !== false ? '1' : '0'}
+    data-back-top-threshold={String(backThreshold)}
+    data-back-top-enable={backEnable ? '1' : '0'}
+    data-page-type={pageType}
+  >
+    {post.reading_progress && pageType === 'post' && <ReadingProgress />}
+
+    <div class="terminal-window">
+      <Header />
+
+      <main class="terminal-body" id="main">
+        <div class={`container ${sidebarVisible ? `has-sidebar sidebar-${sbPos}` : ''}`}>
+          <article class="content">
+            <slot />
+          </article>
+
+          {sidebarVisible && <Sidebar pageType={pageType} />}
+        </div>
+      </main>
+
+      <Footer />
+    </div>
+
+    {search.enable && <SearchOverlay />}
+
+    {backEnable && (
+      <button class="back-to-top" id="back-to-top" type="button" aria-label="Back to top">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <polyline points="4 10 8 6 12 10" />
+        </svg>
+      </button>
+    )}
+
+    {post.fancybox && (
+      <script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui@5/dist/fancybox/fancybox.umd.js" defer is:inline></script>
+    )}
+
+    <script>
+      import '~/scripts/main.js';
+    </script>
+
+    {search.enable && (
+      <script>
+        import '~/scripts/search.js';
+      </script>
+    )}
+
+    {(themeConfig.custom_js || []).map((src: string) => <script src={src} defer is:inline></script>)}
+  </body>
+</html>

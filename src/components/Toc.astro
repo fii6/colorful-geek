@@ -1,0 +1,57 @@
+---
+import { themeConfig } from '~/lib/site-config.js';
+import { t } from '~/lib/i18n.js';
+
+export interface Props {
+  headings: Array<{ depth: number; slug: string; text: string }>;
+  post?: any;
+}
+const { headings, post } = Astro.props;
+const cfg = themeConfig.post || {};
+const enabled = (post?.data?.toc !== false) && cfg.toc;
+if (!enabled) return null as any;
+const maxDepth = cfg.toc_max_depth || 3;
+const items = (headings || []).filter((h) => h.depth >= 2 && h.depth <= maxDepth + 1);
+if (!items.length) return null as any;
+
+// Build a nested list following heading depth.
+type Node = { item: any; children: Node[] };
+const root: Node = { item: null, children: [] };
+const stack: Node[] = [root];
+let baseDepth = items[0]?.depth ?? 2;
+for (const h of items) {
+  const node: Node = { item: h, children: [] };
+  // pop until stack top is shallower than this heading
+  while (stack.length > 1 && (stack[stack.length - 1].item?.depth ?? baseDepth - 1) >= h.depth) {
+    stack.pop();
+  }
+  stack[stack.length - 1].children.push(node);
+  stack.push(node);
+}
+
+function renderList(nodes: Node[]): string {
+  if (!nodes.length) return '';
+  return `<ol>${nodes
+    .map(
+      (n) =>
+        `<li class="toc-item toc-level-${n.item.depth - 1}"><a class="toc-link" href="#${n.item.slug}">${escape(n.item.text)}</a>${renderList(n.children)}</li>`,
+    )
+    .join('')}</ol>`;
+}
+
+function escape(s: string) {
+  return String(s)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;');
+}
+
+const tocHtml = renderList(root.children);
+---
+<aside class="post-toc" aria-label="table of contents">
+  <div class="toc-header">
+    <span class="prompt">$</span>
+    <span>cat toc</span>
+  </div>
+  <div class="toc" set:html={tocHtml} />
+</aside>

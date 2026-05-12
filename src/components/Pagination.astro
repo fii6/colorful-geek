@@ -1,0 +1,28 @@
+---
+import { t } from '~/lib/i18n.js';
+
+export interface Props {
+  page: {
+    currentPage: number;
+    lastPage: number;
+    url: { prev?: string; next?: string };
+  };
+}
+const { page } = Astro.props;
+if (page.lastPage <= 1) return null as any;
+---
+<nav class="pagination" aria-label="pagination">
+  {page.url.prev ? (
+    <a class="page-prev" href={page.url.prev} rel="prev">← {t('pagination.prev')}</a>
+  ) : (
+    <span class="page-prev is-disabled">← {t('pagination.prev')}</span>
+  )}
+
+  <span class="page-current">{page.currentPage} / {page.lastPage}</span>
+
+  {page.url.next ? (
+    <a class="page-next" href={page.url.next} rel="next">{t('pagination.next')} →</a>
+  ) : (
+    <span class="page-next is-disabled">{t('pagination.next')} →</span>
+  )}
+</nav>

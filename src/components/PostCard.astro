@@ -1,0 +1,49 @@
+---
+import { postPath, formatDate, isoDate, stripHtml } from '~/lib/posts.js';
+import { t } from '~/lib/i18n.js';
+
+export interface Props {
+  post: any;
+  idx?: number;
+}
+const { post, idx = 0 } = Astro.props;
+const data = post.data;
+const cover = data.cover || data.thumbnail || data.banner;
+const lcp = idx === 0;
+const href = postPath(post);
+
+let excerpt: string = '';
+if (data.description) {
+  excerpt = data.description;
+} else if (post.body) {
+  excerpt = stripHtml(post.body).slice(0, 200) + '…';
+}
+---
+<article class={`post-card${cover ? ' has-cover' : ''}`}>
+  {cover && (
+    <a class="post-card-cover" href={href} aria-hidden="true" tabindex="-1">
+      <img
+        src={cover}
+        alt=""
+        width="800"
+        height="450"
+        loading={lcp ? 'eager' : 'lazy'}
+        decoding="async"
+        fetchpriority={lcp ? 'high' : 'auto'}
+      />
+    </a>
+  )}
+  <header class="post-card-header">
+    <h2 class="post-card-title">
+      <a href={href}>{data.title}</a>
+    </h2>
+  </header>
+
+  <div class="post-card-excerpt">
+    <p>{excerpt}</p>
+  </div>
+
+  <footer class="post-card-footer">
+    <a class="read-more" href={href}>{t('post.read_more')}</a>
+  </footer>
+</article>

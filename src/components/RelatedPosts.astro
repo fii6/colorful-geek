@@ -1,0 +1,31 @@
+---
+import { themeConfig } from '~/lib/site-config.js';
+import { relatedPosts, formatDate, isoDate, postPath, getPublishedPosts } from '~/lib/posts.js';
+import { t } from '~/lib/i18n.js';
+
+export interface Props {
+  post: any;
+}
+const { post } = Astro.props;
+const limit = themeConfig.post?.related_posts || 5;
+if (!limit) return null as any;
+const all = await getPublishedPosts();
+const related = relatedPosts(post, all, limit);
+if (!related.length) return null as any;
+---
+<section class="related-posts">
+  <div class="related-header">
+    <span class="prompt">$</span>
+    <span>ls related/</span>
+  </div>
+  <ul class="related-list">
+    {related.map((p) => (
+      <li>
+        <a href={postPath(p)}>
+          <span class="related-title">{p.data.title}</span>
+          <time datetime={isoDate(p.data.date)}>{formatDate(p.data.date)}</time>
+        </a>
+      </li>
+    ))}
+  </ul>
+</section>

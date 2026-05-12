@@ -1,0 +1,123 @@
+---
+import { themeConfig, siteConfig } from '~/lib/site-config.js';
+import { t } from '~/lib/i18n.js';
+import { getPublishedPosts, buildTaxonomy, categoryPath, tagPath, tagHue } from '~/lib/posts.js';
+import { socialIcon } from '~/lib/social-icons.js';
+
+export interface Props {
+  pageType?: string;
+}
+const { pageType = 'page' } = Astro.props;
+
+const sb = themeConfig.sidebar || {};
+const widgets = sb.widgets || [];
+const showOn = sb.show_on || ['home', 'post', 'page', 'archive', 'category', 'tag'];
+const visible = sb.enable && showOn.includes(pageType);
+if (!visible) return null as any;
+
+const profile = themeConfig.profile || {};
+const showCats = widgets.includes('categories') && pageType === 'home';
+const showTags = widgets.includes('tags') && pageType === 'home';
+const showProfile = widgets.includes('profile') && profile.enable && pageType === 'home';
+
+const posts = await getPublishedPosts();
+const categories = showCats ? buildTaxonomy(posts, 'categories') : [];
+const tags = showTags ? buildTaxonomy(posts, 'tags') : [];
+---
+<aside class="sidebar" aria-label="sidebar">
+  {widgets.map((widget: string) => {
+    if (widget === 'profile' && showProfile) {
+      return (
+        <section class="widget widget-profile">
+          <div class="widget-body">
+            {profile.avatar && (
+              <img
+                class="profile-avatar"
+                src={profile.avatar}
+                alt="avatar"
+                width="64"
+                height="64"
+                decoding="async"
+                fetchpriority="high"
+              />
+            )}
+            <div class="profile-name">{profile.username || siteConfig.author}</div>
+            {profile.bio && <div class="profile-bio">{profile.bio}</div>}
+            {profile.social && (
+              <ul class="profile-social">
+                {Object.entries(profile.social).map(([name, url]) => {
+                  const icon = socialIcon(name);
+                  const label = icon ? icon.label : name;
+                  return (
+                    <li>
+                      <a
+                        href={url as string}
+                        target="_blank"
+                        rel="noopener"
+                        class={`social-link${icon ? '' : ' is-text-only'}`}
+                        aria-label={label}
+                        title={label}
+                      >
+                        {icon ? (
+                          <svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor" aria-hidden="true">
+                            <path d={icon.d} />
+                          </svg>
+                        ) : (
+                          <span class="social-text">{name}</span>
+                        )}
+                      </a>
+                    </li>
+                  );
+                })}
+              </ul>
+            )}
+          </div>
+        </section>
+      );
+    }
+
+    if (widget === 'categories' && showCats) {
+      return (
+        <section class="widget widget-categories">
+          <div class="widget-label">{t('categories.title')}</div>
+          <ul class="widget-body widget-folders">
+            {categories.map((cat) => (
+              <li>
+                <a href={categoryPath(cat.name)}>
+                  <svg class="folder-mini-icon" viewBox="0 0 16 16" width="14" height="14" xmlns="http://www.w3.org/2000/svg" fill="currentColor" aria-hidden="true">
+                    <path d="M1.75 1A1.75 1.75 0 0 0 0 2.75v10.5C0 14.216.784 15 1.75 15h12.5A1.75 1.75 0 0 0 16 13.25v-8.5A1.75 1.75 0 0 0 14.25 3H7.5a.25.25 0 0 1-.2-.1l-.9-1.2C6.07 1.26 5.55 1 5 1H1.75Z" />
+                  </svg>
+                  <span class="folder-name">{cat.name}</span>
+                  <span class="count">{cat.length}</span>
+                </a>
+              </li>
+            ))}
+          </ul>
+        </section>
+      );
+    }
+
+    if (widget === 'tags' && showTags) {
+      return (
+        <section class="widget widget-tagcloud">
+          <div class="widget-label">{t('tags.title')}</div>
+          <ul class="widget-body widget-taglabels">
+            {tags.map((tag) => (
+              <li>
+                <a href={tagPath(tag.name)} style={`--tag-hue: ${tagHue(tag.name)}`}>
+                  <svg class="tag-mini-icon" viewBox="0 0 16 16" width="13" height="13" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                    <path d="M1 7.775V2.75A1.75 1.75 0 0 1 2.75 1h5.025a1.75 1.75 0 0 1 1.238.513l6.25 6.25a1.75 1.75 0 0 1 0 2.474l-5.026 5.026a1.75 1.75 0 0 1-2.474 0l-6.25-6.25A1.75 1.75 0 0 1 1 7.775Zm1.5 0c0 .066.026.13.073.177l6.25 6.25a.25.25 0 0 0 .354 0l5.025-5.025a.25.25 0 0 0 0-.354l-6.25-6.25a.25.25 0 0 0-.177-.073H2.75a.25.25 0 0 0-.25.25Z" fill="currentColor" />
+                    <circle cx="5" cy="5" r="1" fill="currentColor" />
+                  </svg>
+                  <span class="tag-name">{tag.name}</span>
+                  <span class="count">{tag.length}</span>
+                </a>
+              </li>
+            ))}
+          </ul>
+        </section>
+      );
+    }
+    return null;
+  })}
+</aside>

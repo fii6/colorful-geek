@@ -1,0 +1,27 @@
+---
+import { themeConfig, siteConfig } from '~/lib/site-config.js';
+import { t } from '~/lib/i18n.js';
+
+const footer = themeConfig.footer || {};
+---
+<footer class="terminal-footer">
+  <div class="footer-copyright" set:html={footer.copyright || siteConfig.title} />
+  <div class="footer-meta">
+    {footer.show_powered_by !== false && (
+      <span>
+        {t('footer.powered_by')} <a href="https://astro.build" rel="noopener" target="_blank">Astro</a>
+        {' '}·{' '}
+        {t('footer.theme')} <a href="https://github.com/" rel="noopener" target="_blank">colorful-geek</a>
+      </span>
+    )}
+    {(footer.links || []).map((link: any) => (
+      <a
+        href={link.url}
+        target={/^https?:/.test(link.url) ? '_blank' : undefined}
+        rel={/^https?:/.test(link.url) ? 'noopener' : undefined}
+      >
+        {link.text}
+      </a>
+    ))}
+  </div>
+</footer>

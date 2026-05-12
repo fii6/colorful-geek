@@ -1,0 +1,61 @@
+---
+import BaseLayout from '~/layouts/BaseLayout.astro';
+import { getPublishedPosts, buildTaxonomy, postPath, formatDate, isoDate, taxonomySlug } from '~/lib/posts.js';
+
+export async function getStaticPaths() {
+  const posts = await getPublishedPosts();
+  const categories = buildTaxonomy(posts, 'categories');
+  return categories.map((cat) => ({
+    params: { name: taxonomySlug(cat.name) },
+    props: { category: cat },
+  }));
+}
+
+const { category } = Astro.props;
+---
+<BaseLayout pageType="category" title={category.name}>
+  <section class="taxonomy">
+    <header class="taxonomy-header">
+      <span class="prompt">$</span>
+      <span>cd categories/{category.name}</span>
+    </header>
+    <h1 class="taxonomy-title">{category.name}</h1>
+
+    <ul class="archive-list">
+      {category.posts.map((post: any) => (
+        <li class="archive-item">
+          <time datetime={isoDate(post.data.date)}>{formatDate(post.data.date)}</time>
+          <a href={postPath(post)}>{post.data.title}</a>
+        </li>
+      ))}
+    </ul>
+  </section>
+</BaseLayout>
+
+<style>
+  .archive-list {
+    list-style: none;
+    margin: 14px 0 0;
+    padding: 0;
+  }
+  .archive-item {
+    display: flex;
+    gap: 14px;
+    align-items: baseline;
+    padding: 8px 0;
+    border-bottom: 1px dashed var(--border-subtle);
+  }
+  .archive-item:last-child { border-bottom: 0; }
+  .archive-item time {
+    flex-shrink: 0;
+    width: 92px;
+    color: var(--fg-subtle);
+    font-size: 12px;
+    font-variant-numeric: tabular-nums;
+  }
+  .archive-item a {
+    color: var(--fg-default);
+    border-bottom: none;
+  }
+  .archive-item a:hover { color: var(--accent-fg); }
+</style>

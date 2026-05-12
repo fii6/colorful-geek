@@ -1,0 +1,38 @@
+---
+import BaseLayout from '~/layouts/BaseLayout.astro';
+import PostCard from '~/components/PostCard.astro';
+import Pagination from '~/components/Pagination.astro';
+import { siteConfig } from '~/lib/site-config.js';
+import { getPublishedPosts } from '~/lib/posts.js';
+
+const perPage = siteConfig.per_page || 10;
+
+export async function getStaticPaths() {
+  const posts = await getPublishedPosts();
+  const perPage = siteConfig.per_page || 10;
+  const total = Math.max(1, Math.ceil(posts.length / perPage));
+  // Page 1 lives at "/" (index.astro). Emit pages 2..N here.
+  return Array.from({ length: total - 1 }, (_, i) => i + 2).map((n) => ({
+    params: { page: String(n) },
+    props: { current: n, total, posts: posts.slice((n - 1) * perPage, n * perPage) },
+  }));
+}
+
+const { current, total, posts } = Astro.props as { current: number; total: number; posts: any[] };
+const page = {
+  currentPage: current,
+  lastPage: total,
+  url: {
+    prev: current === 2 ? '/' : `/page/${current - 1}/`,
+    next: current < total ? `/page/${current + 1}/` : undefined,
+  },
+};
+---
+<BaseLayout pageType="home" title={`Page ${current}`}>
+  <div class="post-list" data-pagefind-ignore>
+    {posts.map((post: any, idx: number) => (
+      <PostCard post={post} idx={idx} />
+    ))}
+  </div>
+  <Pagination page={page} />
+</BaseLayout>

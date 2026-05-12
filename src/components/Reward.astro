@@ -1,0 +1,42 @@
+---
+import { themeConfig } from '~/lib/site-config.js';
+import { t } from '~/lib/i18n.js';
+
+export interface Props {
+  post: any;
+}
+const { post } = Astro.props;
+const r = themeConfig.reward || {};
+const show = post.data.reward !== false && r.enable && Array.isArray(r.methods) && r.methods.length > 0;
+if (!show) return null as any;
+const title = r.title || t('reward.default_title');
+const desc = r.description || t('reward.default_desc');
+---
+<aside class="post-reward">
+  <details class="reward-toggle">
+    <summary>
+      <svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor" aria-hidden="true">
+        <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" />
+      </svg>
+      <span>{t('reward.button')}</span>
+    </summary>
+    <div class="reward-body">
+      <div class="reward-head">
+        <div class="reward-title">{title}</div>
+        {desc && <div class="reward-desc">{desc}</div>}
+      </div>
+      <div class="reward-methods">
+        {(r.methods || []).map((m: any) => (
+          <figure class="reward-method">
+            {m.qrcode ? (
+              <img src={m.qrcode} alt={m.name} loading="lazy" />
+            ) : m.url ? (
+              <a class="reward-link" href={m.url} target="_blank" rel="noopener">{m.name}</a>
+            ) : null}
+            {m.name && m.qrcode && <figcaption>{m.name}</figcaption>}
+          </figure>
+        ))}
+      </div>
+    </div>
+  </details>
+</aside>

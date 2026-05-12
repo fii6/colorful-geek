@@ -1,0 +1,56 @@
+---
+import BaseLayout from '~/layouts/BaseLayout.astro';
+import { themeConfig } from '~/lib/site-config.js';
+import { getCollection, render } from 'astro:content';
+
+const links = themeConfig.friend_links || [];
+
+// Optional intro from src/content/pages/links.md (when frontmatter `layout: links`)
+const pages = await getCollection('pages');
+const linksPage = pages.find((p) => p.data.layout === 'links' || /links/i.test(p.id));
+let IntroContent: any = null;
+let title = '友链';
+if (linksPage) {
+  title = linksPage.data.title || title;
+  const rendered = await render(linksPage);
+  IntroContent = rendered.Content;
+}
+---
+<BaseLayout pageType="links" title={title}>
+  <section class="links-page">
+    <header class="links-header">
+      <h1 class="post-title">{title}</h1>
+    </header>
+
+    {IntroContent && (
+      <div class="post-body links-intro">
+        <IntroContent />
+      </div>
+    )}
+
+    {links.length ? (
+      <ul class="link-cards">
+        {links.map((link: any) => (
+          <li class="link-card">
+            <a href={link.url} target="_blank" rel="noopener">
+              {link.avatar ? (
+                <img class="link-avatar" src={link.avatar} alt={link.name} loading="lazy" />
+              ) : (
+                <span class="link-avatar link-avatar-fallback">
+                  {(link.name || '?').slice(0, 1).toUpperCase()}
+                </span>
+              )}
+              <div class="link-text">
+                <div class="link-name">{link.name}</div>
+                {link.description && <div class="link-desc">{link.description}</div>}
+                <div class="link-url">{link.url.replace(/^https?:\/\//, '')}</div>
+              </div>
+            </a>
+          </li>
+        ))}
+      </ul>
+    ) : (
+      <div class="post-body"><p>暂无友链。</p></div>
+    )}
+  </section>
+</BaseLayout>

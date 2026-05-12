@@ -1,0 +1,74 @@
+---
+import { themeConfig, siteConfig } from '~/lib/site-config.js';
+import { t } from '~/lib/i18n.js';
+
+const brand = themeConfig.brand || {};
+const search = themeConfig.search || {};
+const headerCfg = themeConfig.header || {};
+const appearance = themeConfig.appearance || {};
+
+const currentPath = Astro.url.pathname.replace(/\/+$/, '/') || '/';
+function isActive(path: string) {
+  if (path === '/') return currentPath === '/';
+  const p = path.endsWith('/') ? path : path + '/';
+  return currentPath === p || currentPath.startsWith(p);
+}
+---
+<header class="terminal-header">
+  <div class="title-bar">
+    {brand.window_controls !== false && (
+      <div class="terminal-logo" aria-hidden="true">
+        <span class="terminal-mark">{brand.logo_text || '>_'}</span>
+      </div>
+    )}
+
+    <div class="title-text">
+      <a href="/" class="title-link">
+        <span class="title-host">{brand.title || siteConfig.title}</span>
+      </a>
+    </div>
+
+    <div class="title-actions">
+      {search.enable && headerCfg.show_search !== false && (
+        <button class="icon-btn js-open-search" aria-label="Search" title="Search (/)">
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5">
+            <circle cx="7" cy="7" r="4.5" />
+            <line x1="10.5" y1="10.5" x2="14" y2="14" />
+          </svg>
+        </button>
+      )}
+      {appearance.toggle && headerCfg.show_theme_toggle !== false && (
+        <button class="icon-btn js-toggle-theme" aria-label="Toggle theme" title="Toggle theme">
+          <svg class="icon-dark" width="16" height="16" viewBox="0 0 16 16" fill="currentColor">
+            <path d="M11.5 8.5a4 4 0 0 1-5-5 5 5 0 1 0 5 5z" />
+          </svg>
+          <svg class="icon-light" width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5">
+            <circle cx="8" cy="8" r="3" />
+            <line x1="8" y1="1.5" x2="8" y2="3" />
+            <line x1="8" y1="13" x2="8" y2="14.5" />
+            <line x1="1.5" y1="8" x2="3" y2="8" />
+            <line x1="13" y1="8" x2="14.5" y2="8" />
+            <line x1="3.5" y1="3.5" x2="4.5" y2="4.5" />
+            <line x1="11.5" y1="11.5" x2="12.5" y2="12.5" />
+            <line x1="3.5" y1="12.5" x2="4.5" y2="11.5" />
+            <line x1="11.5" y1="4.5" x2="12.5" y2="3.5" />
+          </svg>
+        </button>
+      )}
+    </div>
+  </div>
+
+  {themeConfig.menu && (
+    <nav class="terminal-nav" aria-label="primary">
+      <ul>
+        {Object.entries(themeConfig.menu).map(([name, path]) => (
+          <li class={isActive(path as string) ? 'is-active' : ''}>
+            <a href={path}>
+              <span class="nav-name">{t('menu.' + name)}</span>
+            </a>
+          </li>
+        ))}
+      </ul>
+    </nav>
+  )}
+</header>

@@ -1,0 +1,62 @@
+---
+import { themeConfig, siteConfig } from '~/lib/site-config.js';
+import { t } from '~/lib/i18n.js';
+
+export interface Props {
+  post: any;
+}
+const { post } = Astro.props;
+
+const lic = themeConfig.license || {};
+const showLicense = post.data.license !== false && lic.enable;
+if (!showLicense) return null as any;
+
+const TYPES: Record<string, { code: string; icons: string[] }> = {
+  by: { code: 'BY', icons: ['by'] },
+  'by-sa': { code: 'BY-SA', icons: ['by', 'sa'] },
+  'by-nc': { code: 'BY-NC', icons: ['by', 'nc'] },
+  'by-nc-sa': { code: 'BY-NC-SA', icons: ['by', 'nc', 'sa'] },
+  'by-nd': { code: 'BY-ND', icons: ['by', 'nd'] },
+  'by-nc-nd': { code: 'BY-NC-ND', icons: ['by', 'nc', 'nd'] },
+};
+
+const typeKey = String(lic.type || 'by-nc-sa').toLowerCase();
+const isZero = typeKey === 'zero' || typeKey === 'cc0';
+const tdef = isZero ? { code: 'CC0', icons: ['zero'] } : (TYPES[typeKey] || TYPES['by-nc-sa']);
+const ver = lic.version || '4.0';
+const url = lic.url || (isZero
+  ? 'https://creativecommons.org/publicdomain/zero/1.0/'
+  : `https://creativecommons.org/licenses/${TYPES[typeKey] ? typeKey : 'by-nc-sa'}/${ver}/`);
+const fullName = isZero ? `CC0 ${lic.version || '1.0'}` : `CC ${tdef.code} ${ver}`;
+const pathname = Astro.url.pathname;
+const postUrl = (siteConfig.url || '').replace(/\/$/, '') + pathname;
+---
+<aside class="post-license" data-license={typeKey}>
+  <div class="license-head">
+    <span class="license-cc" aria-hidden="true">
+      <svg viewBox="0 0 24 24" width="22" height="22"><circle cx="12" cy="12" r="11" fill="none" stroke="currentColor" stroke-width="1.5" /><text x="12" y="15.6" text-anchor="middle" font-size="8.5" font-weight="700" font-family="Arial,Helvetica,sans-serif" fill="currentColor">CC</text></svg>
+      {tdef.icons.map((ic: string) => (
+        <svg viewBox="0 0 24 24" width="22" height="22"><circle cx="12" cy="12" r="11" fill="none" stroke="currentColor" stroke-width="1.5" /><text x="12" y="15.6" text-anchor="middle" font-size={ic.length > 2 ? 6.5 : 8} font-weight="700" font-family="Arial,Helvetica,sans-serif" fill="currentColor">{ic === 'zero' ? '0' : ic.toUpperCase()}</text></svg>
+      ))}
+    </span>
+    <a class="license-name" href={url} target="_blank" rel="noopener license">{fullName}</a>
+  </div>
+  <dl class="license-meta">
+    <div>
+      <dt>{t('license.author')}</dt>
+      <dd>{post.data.author || siteConfig.author}</dd>
+    </div>
+    <div>
+      <dt>{t('license.url')}</dt>
+      <dd><a href={pathname}>{postUrl}</a></dd>
+    </div>
+    <div>
+      <dt>{t('license.declare')}</dt>
+      <dd>
+        {t('license.notice_prefix')}
+        {' '}<a href={url} target="_blank" rel="noopener license">{fullName}</a>
+        {t('license.notice_suffix')}
+      </dd>
+    </div>
+  </dl>
+</aside>

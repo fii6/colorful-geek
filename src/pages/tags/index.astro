@@ -1,0 +1,30 @@
+---
+import BaseLayout from '~/layouts/BaseLayout.astro';
+import { getPublishedPosts, buildTaxonomy, tagPath, tagHue } from '~/lib/posts.js';
+import { t } from '~/lib/i18n.js';
+
+const posts = await getPublishedPosts();
+const tags = buildTaxonomy(posts, 'tags');
+---
+<BaseLayout pageType="tags" title={t('tags.title')}>
+  <section class="taxonomy taxonomy-index">
+    <header class="taxonomy-header">
+      <span class="prompt">$</span>
+      <span>ls tags/</span>
+    </header>
+    <ul class="tag-label-grid">
+      {tags.map((tag) => (
+        <li>
+          <a href={tagPath(tag.name)} style={`--tag-hue: ${tagHue(tag.name)}`}>
+            <svg class="tag-mini-icon" viewBox="0 0 16 16" width="14" height="14" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+              <path d="M1 7.775V2.75A1.75 1.75 0 0 1 2.75 1h5.025a1.75 1.75 0 0 1 1.238.513l6.25 6.25a1.75 1.75 0 0 1 0 2.474l-5.026 5.026a1.75 1.75 0 0 1-2.474 0l-6.25-6.25A1.75 1.75 0 0 1 1 7.775Zm1.5 0c0 .066.026.13.073.177l6.25 6.25a.25.25 0 0 0 .354 0l5.025-5.025a.25.25 0 0 0 0-.354l-6.25-6.25a.25.25 0 0 0-.177-.073H2.75a.25.25 0 0 0-.25.25Z" fill="currentColor" />
+              <circle cx="5" cy="5" r="1" fill="currentColor" />
+            </svg>
+            <span class="tag-name">{tag.name}</span>
+            <span class="count">·{tag.length}</span>
+          </a>
+        </li>
+      ))}
+    </ul>
+  </section>
+</BaseLayout>

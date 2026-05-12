@@ -1,0 +1,132 @@
+---
+import { siteConfig, themeConfig } from '~/lib/site-config.js';
+
+export interface Props {
+  title?: string;
+  description?: string;
+  pageType?: 'home' | 'post' | 'page' | 'archive' | 'category' | 'tag' | 'tags' | 'categories' | '404' | 'links';
+  keywords?: string;
+  cover?: string;
+  canonical?: string;
+}
+
+const { title, description, pageType = 'page', keywords, cover, canonical } = Astro.props;
+
+const sep = themeConfig.appearance.title_separator || ' · ';
+const pageTitle = title ? `${title}${sep}${siteConfig.title}` : siteConfig.title;
+const pageDescription = description || siteConfig.description || '';
+const pageKeywords = keywords || siteConfig.keywords || '';
+const canonicalUrl = canonical || new URL(Astro.url.pathname, Astro.site || siteConfig.url).toString();
+
+// Resource hints
+const hintOrigins = new Set<string>(['https://fonts.googleapis.com', 'https://fonts.gstatic.com']);
+const crossOriginHosts = new Set<string>(['https://fonts.gstatic.com']);
+const avatar = themeConfig.profile?.avatar;
+if (avatar && /^https?:\/\//.test(avatar)) {
+  try { hintOrigins.add(new URL(avatar).origin); } catch (e) {}
+}
+if (cover && /^https?:\/\//.test(cover)) {
+  try { hintOrigins.add(new URL(cover).origin); } catch (e) {}
+}
+if (themeConfig.post?.fancybox) hintOrigins.add('https://cdn.jsdelivr.net');
+
+const ap = themeConfig.appearance || {};
+const overrides: string[] = [];
+if (ap.accent) overrides.push(`--accent-fg:${ap.accent};--accent-emphasis:${ap.accent};`);
+if (ap.font_mono) overrides.push(`--font-mono:${ap.font_mono};`);
+if (ap.font_sans) overrides.push(`--font-sans:${ap.font_sans};`);
+if (ap.article_font_family) {
+  const stack = ap.article_font_family.includes(',')
+    ? ap.article_font_family
+    : `${ap.article_font_family},${ap.font_sans || 'sans-serif'}`;
+  overrides.push(`--font-article:${stack};`);
+}
+
+import '~/styles/main.css';
+import '~/styles/astro-overrides.css';
+---
+<head>
+  <meta charset="UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content={ap.theme_color || '#0d1117'} />
+
+  <title>{pageTitle}</title>
+  <meta name="description" content={pageDescription} />
+  <meta name="keywords" content={pageKeywords} />
+  <meta name="author" content={siteConfig.author} />
+
+  <meta property="og:title" content={pageTitle} />
+  <meta property="og:description" content={pageDescription} />
+  <meta property="og:type" content={pageType === 'post' ? 'article' : 'website'} />
+  <meta property="og:url" content={canonicalUrl} />
+  <meta property="og:site_name" content={siteConfig.title} />
+  {cover && <meta property="og:image" content={cover} />}
+
+  <meta name="twitter:card" content={cover ? 'summary_large_image' : 'summary'} />
+  <meta name="twitter:title" content={pageTitle} />
+  <meta name="twitter:description" content={pageDescription} />
+
+  <link rel="canonical" href={canonicalUrl} />
+  {themeConfig.favicon && <link rel="icon" href={themeConfig.favicon} />}
+
+  {siteConfig.feed?.path && (
+    <link rel="alternate" type="application/rss+xml" title={siteConfig.title} href={siteConfig.feed.path} />
+  )}
+  <link rel="sitemap" href="/sitemap-index.xml" />
+
+  {Array.from(hintOrigins).map((origin) => (
+    <>
+      <link rel="preconnect" href={origin} crossorigin={crossOriginHosts.has(origin) ? '' : undefined} />
+      <link rel="dns-prefetch" href={origin} />
+    </>
+  ))}
+
+  <link
+    rel="preload"
+    as="style"
+    href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Inter:wght@400;500;700&display=swap"
+    onload="this.onload=null;this.rel='stylesheet'"
+  />
+  <noscript>
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Inter:wght@400;500;700&display=swap"
+    />
+  </noscript>
+
+  {themeConfig.post?.fancybox && (
+    <>
+      <link
+        rel="preload"
+        as="style"
+        href="https://cdn.jsdelivr.net/npm/@fancyapps/ui@5/dist/fancybox/fancybox.css"
+        onload="this.onload=null;this.rel='stylesheet'"
+      />
+      <noscript>
+        <link
+          rel="stylesheet"
+          href="https://cdn.jsdelivr.net/npm/@fancyapps/ui@5/dist/fancybox/fancybox.css"
+        />
+      </noscript>
+    </>
+  )}
+
+  {(themeConfig.custom_css || []).map((href: string) => <link rel="stylesheet" href={href} />)}
+
+  {ap.article_font_url && <link rel="stylesheet" href={ap.article_font_url} />}
+
+  {overrides.length > 0 && (
+    <style set:html={`:root,[data-theme="dark"],[data-theme="light"]{${overrides.join('')}}`} />
+  )}
+
+  <script is:inline define:vars={{ defMode: ap.default_mode || 'dark' }}>
+    (function () {
+      try {
+        var saved = localStorage.getItem('theme-mode');
+        var mode = saved || defMode;
+        document.documentElement.setAttribute('data-theme', mode);
+      } catch (e) {}
+    })();
+  </script>
+</head>
