@@ -8,7 +8,6 @@ import rehypeSlug from 'rehype-slug';
 import rehypeAutolinkHeadings from 'rehype-autolink-headings';
 import remarkGithubBlockquoteAlert from 'remark-github-blockquote-alert';
 import { siteConfig } from './src/lib/site-config.js';
-import { pluginLanguageBadge } from './src/plugins/expressive-code/language-badge.ts';
 import { pluginCustomCopyButton } from './src/plugins/expressive-code/custom-copy-button.ts';
 
 export default defineConfig({
@@ -22,7 +21,6 @@ export default defineConfig({
       plugins: [
         pluginCollapsibleSections(),
         pluginLineNumbers(),
-        pluginLanguageBadge(),
         pluginCustomCopyButton(),
       ],
       defaultProps: {

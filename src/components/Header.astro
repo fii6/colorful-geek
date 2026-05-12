@@ -13,6 +13,16 @@ function isActive(path: string) {
   const p = path.endsWith('/') ? path : path + '/';
   return currentPath === p || currentPath.startsWith(p);
 }
+
+const rawTitle = brand.title || siteConfig.title;
+const titleParts = (() => {
+  const t = String(rawTitle).trim();
+  const idx = t.indexOf(' ');
+  if (idx > 0) {
+    return { first: t.slice(0, idx), rest: t.slice(idx + 1) };
+  }
+  return { first: t, rest: '' };
+})();
 ---
 <header class="terminal-header">
   <div class="title-bar">
@@ -24,7 +34,13 @@ function isActive(path: string) {
 
     <div class="title-text">
       <a href="/" class="title-link">
-        <span class="title-host">{brand.title || siteConfig.title}</span>
+        <span class="title-host">
+          <span class="title-word title-word-1">{titleParts.first}</span>{titleParts.rest && (
+            <>
+              {' '}<span class="title-word title-word-2">{titleParts.rest}</span>
+            </>
+          )}
+        </span>
       </a>
     </div>
 

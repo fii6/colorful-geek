@@ -6,6 +6,28 @@
   background: var(--codeblock-selection);
 }
 
+/* Hide the EC frame header (traffic lights / tab title / terminal title)
+   so code blocks render flush — no top decoration bar. */
+.post-body .expressive-code .frame .header {
+  display: none !important;
+}
+.post-body .expressive-code .frame::before,
+.post-body .expressive-code .frame::after {
+  display: none !important;
+  content: none !important;
+}
+.post-body .expressive-code .frame {
+  --header-border-color: transparent;
+  --header-background: transparent;
+}
+/* With the header hidden, the <pre> needs rounded top corners too — EC
+   normally only rounds the bottom because the header rounds the top. */
+.post-body .expressive-code .frame pre {
+  border-top-left-radius: 0.75rem !important;
+  border-top-right-radius: 0.75rem !important;
+  border-top: 1px solid var(--code-border) !important;
+}
+
 /* Narrow the line-number gutter — default padding-inline is 2ch on both
    sides (≈6ch wide). Keep min-width tied to the plugin's --lnWidth so the
    right edge stays aligned across 1- and 2-digit line numbers. */
@@ -14,27 +36,30 @@
   min-width: var(--lnWidth, 2ch);
 }
 
-/* Copy button (rendered by pluginCustomCopyButton) */
+/* Copy button — floats over the code with a translucent backdrop so the
+   code stays readable underneath. */
 .post-body .copy-btn {
   all: initial;
   position: absolute;
-  top: 0.6rem;
-  right: 0.6rem;
-  width: 2rem;
-  height: 2rem;
-  border-radius: 0.5rem;
-  background: var(--codeblock-topbar-bg);
-  border: 1px solid var(--code-border);
+  top: 0.4rem;
+  right: 0.4rem;
+  width: 1.85rem;
+  height: 1.85rem;
+  border-radius: 0.45rem;
+  background: color-mix(in srgb, var(--codeblock-bg) 35%, transparent);
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+  border: 1px solid color-mix(in srgb, var(--code-border) 55%, transparent);
   color: var(--code-fg);
   cursor: pointer;
   z-index: 20;
-  opacity: 0;
+  opacity: 0.35;
   transition: opacity 200ms ease, transform 120ms ease, background 200ms ease,
               border-color 200ms ease;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.35);
 }
 .post-body .copy-btn:hover {
-  background: var(--code-gutter-bg);
+  opacity: 1;
+  background: color-mix(in srgb, var(--codeblock-bg) 88%, transparent);
   border-color: var(--accent-fg);
 }
 .post-body .copy-btn:active {
@@ -42,10 +67,13 @@
 }
 .post-body .frame:hover .copy-btn,
 .post-body .expressive-code:focus-within .copy-btn {
+  opacity: 0.85;
+}
+.post-body .frame:hover .copy-btn:hover {
   opacity: 1;
 }
 @media (hover: none) {
-  .post-body .copy-btn { opacity: 1; }
+  .post-body .copy-btn { opacity: 0.7; }
 }
 
 .post-body .copy-btn-icon {

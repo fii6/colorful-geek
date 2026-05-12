@@ -2,7 +2,7 @@
 import { themeConfig, siteConfig } from '~/lib/site-config.js';
 import { t } from '~/lib/i18n.js';
 import { getPublishedPosts, buildTaxonomy, categoryPath, tagPath, tagHue } from '~/lib/posts.js';
-import { socialIcon } from '~/lib/social-icons.js';
+import { socialIcon, SOCIAL_ALIASES } from '~/lib/social-icons.js';
 
 export interface Props {
   pageType?: string;
@@ -48,6 +48,7 @@ const tags = showTags ? buildTaxonomy(posts, 'tags') : [];
                 {Object.entries(profile.social).map(([name, url]) => {
                   const icon = socialIcon(name);
                   const label = icon ? icon.label : name;
+                  const key = (SOCIAL_ALIASES[name.toLowerCase()] || name.toLowerCase());
                   return (
                     <li>
                       <a
@@ -55,13 +56,28 @@ const tags = showTags ? buildTaxonomy(posts, 'tags') : [];
                         target="_blank"
                         rel="noopener"
                         class={`social-link${icon ? '' : ' is-text-only'}`}
+                        data-social={key}
                         aria-label={label}
                         title={label}
                       >
                         {icon ? (
-                          <svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor" aria-hidden="true">
-                            <path d={icon.d} />
-                          </svg>
+                          key === 'email' ? (
+                            <svg class="social-svg social-svg-email" viewBox="0 0 24 24" width="16" height="16" aria-hidden="true">
+                              <defs>
+                                <linearGradient id="gmail-grad" x1="0" y1="0" x2="1" y2="1">
+                                  <stop offset="0%" stop-color="#EA4335" />
+                                  <stop offset="35%" stop-color="#FBBC05" />
+                                  <stop offset="65%" stop-color="#34A853" />
+                                  <stop offset="100%" stop-color="#4285F4" />
+                                </linearGradient>
+                              </defs>
+                              <path fill="url(#gmail-grad)" d={icon.d} />
+                            </svg>
+                          ) : (
+                            <svg class={`social-svg social-svg-${key}`} viewBox="0 0 24 24" width="16" height="16" fill="currentColor" aria-hidden="true">
+                              <path d={icon.d} />
+                            </svg>
+                          )
                         ) : (
                           <span class="social-text">{name}</span>
                         )}
@@ -84,9 +100,14 @@ const tags = showTags ? buildTaxonomy(posts, 'tags') : [];
             {categories.map((cat) => (
               <li>
                 <a href={categoryPath(cat.name)}>
-                  <svg class="folder-mini-icon" viewBox="0 0 16 16" width="14" height="14" xmlns="http://www.w3.org/2000/svg" fill="currentColor" aria-hidden="true">
-                    <path d="M1.75 1A1.75 1.75 0 0 0 0 2.75v10.5C0 14.216.784 15 1.75 15h12.5A1.75 1.75 0 0 0 16 13.25v-8.5A1.75 1.75 0 0 0 14.25 3H7.5a.25.25 0 0 1-.2-.1l-.9-1.2C6.07 1.26 5.55 1 5 1H1.75Z" />
-                  </svg>
+                  <span class="folder-mini-icon" aria-hidden="true">
+                    <svg class="fm-icon-back" viewBox="0 0 16 16" width="15" height="15" fill="currentColor">
+                      <path d="M1.75 2.5A1.75 1.75 0 0 0 0 4.25v8.5C0 13.716.784 14.5 1.75 14.5h12.5A1.75 1.75 0 0 0 16 12.75v-7A1.75 1.75 0 0 0 14.25 4H7.5a.25.25 0 0 1-.2-.1l-.9-1.2C6.07 2.26 5.55 2 5 2H1.75Z"/>
+                    </svg>
+                    <svg class="fm-icon-front" viewBox="0 0 16 16" width="15" height="15" fill="currentColor">
+                      <path d="M.75 4.5h14.5L14 13.5a1 1 0 0 1-.99.875H2.99A1 1 0 0 1 2 13.5L.75 4.5Z"/>
+                    </svg>
+                  </span>
                   <span class="folder-name">{cat.name}</span>
                   <span class="count">{cat.length}</span>
                 </a>

@@ -27,6 +27,15 @@
     btn.addEventListener('click', function () {
       const cur = root.getAttribute('data-theme') || 'dark';
       setTheme(cur === 'dark' ? 'light' : 'dark');
+      btn.classList.remove('is-switching');
+      // force reflow so the animation restarts on rapid clicks
+      void btn.offsetWidth;
+      btn.classList.add('is-switching');
+      setTimeout(function () { btn.classList.remove('is-switching'); }, 600);
+      // Drop focus so the button doesn't stay highlighted after a click —
+      // mouse/touch clicks don't need the focus ring, keyboard activation
+      // still gets it via :focus-visible.
+      try { btn.blur(); } catch (e) {}
     });
   });
 
@@ -242,6 +251,23 @@
     } else if (e.key === 'g') {
       window.location.href = (window.SITE_ROOT || '/');
     }
+  });
+
+  // ─── Post card cursor-follow glow ───────────────────────────────────
+  // Updates --mx/--my custom properties on each post card so the
+  // radial-gradient ::after layer tracks the cursor.
+  document.querySelectorAll('.post-card').forEach(function (card) {
+    card.addEventListener('pointermove', function (e) {
+      const rect = card.getBoundingClientRect();
+      const x = ((e.clientX - rect.left) / rect.width) * 100;
+      const y = ((e.clientY - rect.top) / rect.height) * 100;
+      card.style.setProperty('--mx', x + '%');
+      card.style.setProperty('--my', y + '%');
+    });
+    card.addEventListener('pointerleave', function () {
+      card.style.removeProperty('--mx');
+      card.style.removeProperty('--my');
+    });
   });
 
   window.__terminalCloseSearch = closeSearch;

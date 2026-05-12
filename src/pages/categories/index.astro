@@ -1,34 +1,84 @@
 ---
 import BaseLayout from '~/layouts/BaseLayout.astro';
-import { getPublishedPosts, buildTaxonomy, categoryPath } from '~/lib/posts.js';
+import { getPublishedPosts, buildTaxonomy, categoryPath, formatDate } from '~/lib/posts.js';
 import { t } from '~/lib/i18n.js';
 
 const posts = await getPublishedPosts();
-const categories = buildTaxonomy(posts, 'categories');
+const categories = buildTaxonomy(posts, 'categories').map((cat) => {
+  const latest = cat.posts.reduce((acc, p) => {
+    const d = +new Date(p.data.date);
+    return d > acc ? d : acc;
+  }, 0);
+  return { ...cat, modified: latest ? new Date(latest) : null };
+});
 ---
 <BaseLayout pageType="categories" title={t('categories.title')}>
-  <section class="taxonomy taxonomy-index categories-page">
-    <header class="taxonomy-header">
-      <h1 class="archive-title">{t('categories.title')}</h1>
-      <span class="archive-count">{categories.length}</span>
+  <section class="taxonomy taxonomy-index categories-page file-manager">
+    <header class="fm-toolbar">
+      <div class="fm-nav-buttons" aria-hidden="true">
+        <span class="fm-nav-btn is-disabled" title="Back">
+          <svg viewBox="0 0 16 16" width="14" height="14" fill="currentColor"><path d="M9.78 12.78a.75.75 0 0 1-1.06 0L4.47 8.53a.75.75 0 0 1 0-1.06l4.25-4.25a.75.75 0 1 1 1.06 1.06L6.06 8l3.72 3.72a.75.75 0 0 1 0 1.06Z"/></svg>
+        </span>
+        <span class="fm-nav-btn is-disabled" title="Forward">
+          <svg viewBox="0 0 16 16" width="14" height="14" fill="currentColor"><path d="M6.22 3.22a.75.75 0 0 1 1.06 0l4.25 4.25a.75.75 0 0 1 0 1.06l-4.25 4.25a.75.75 0 1 1-1.06-1.06L9.94 8 6.22 4.28a.75.75 0 0 1 0-1.06Z"/></svg>
+        </span>
+        <a class="fm-nav-btn" href="/" title="Home">
+          <svg viewBox="0 0 16 16" width="14" height="14" fill="currentColor"><path d="M6.906 14v-3.594a.5.5 0 0 1 .5-.5h1.187a.5.5 0 0 1 .5.5V14h2.937a.5.5 0 0 0 .5-.5V7.687l-4.531-4.53L3.469 7.687V13.5a.5.5 0 0 0 .5.5h2.937Zm.094-12.281 5.594 5.594V13.5a1.5 1.5 0 0 1-1.5 1.5H4.969a1.5 1.5 0 0 1-1.5-1.5V7.313L7 1.719a.5.5 0 0 1 .707 0Z"/></svg>
+        </a>
+      </div>
+      <div class="fm-pathbar" role="navigation">
+        <span class="fm-path-prompt">$</span>
+        <span class="fm-path-seg">~</span>
+        <span class="fm-path-sep">/</span>
+        <span class="fm-path-seg is-current">categories</span>
+      </div>
+      <div class="fm-counter">
+        <svg viewBox="0 0 16 16" width="14" height="14" fill="currentColor" aria-hidden="true"><path d="M1.75 1A1.75 1.75 0 0 0 0 2.75v10.5C0 14.216.784 15 1.75 15h12.5A1.75 1.75 0 0 0 16 13.25v-8.5A1.75 1.75 0 0 0 14.25 3H7.5a.25.25 0 0 1-.2-.1l-.9-1.2C6.07 1.26 5.55 1 5 1H1.75Z"/></svg>
+        <span>{categories.length}</span>
+      </div>
     </header>
 
-    <ul class="folder-grid">
+    <div class="fm-columns" role="row" aria-hidden="true">
+      <span class="fm-col fm-col-name">{t('categories.col_name') || 'Name'}</span>
+      <span class="fm-col fm-col-items">{t('categories.col_items') || 'Items'}</span>
+      <span class="fm-col fm-col-modified">{t('categories.col_modified') || 'Modified'}</span>
+    </div>
+
+    <ul class="fm-list">
       {categories.map((cat) => (
-        <li class="folder-card">
+        <li class="fm-row">
           <a href={categoryPath(cat.name)}>
-            <span class="folder-icon" aria-hidden="true">
-              <svg viewBox="0 0 16 16" width="16" height="16" xmlns="http://www.w3.org/2000/svg" fill="currentColor">
-                <path d="M1.75 1A1.75 1.75 0 0 0 0 2.75v10.5C0 14.216.784 15 1.75 15h12.5A1.75 1.75 0 0 0 16 13.25v-8.5A1.75 1.75 0 0 0 14.25 3H7.5a.25.25 0 0 1-.2-.1l-.9-1.2C6.07 1.26 5.55 1 5 1H1.75Z" />
-              </svg>
+            <span class="fm-cell fm-cell-name">
+              <span class="fm-icon" aria-hidden="true">
+                <svg class="fm-icon-back" viewBox="0 0 16 16" width="18" height="18" fill="currentColor">
+                  <path d="M1.75 2.5A1.75 1.75 0 0 0 0 4.25v8.5C0 13.716.784 14.5 1.75 14.5h12.5A1.75 1.75 0 0 0 16 12.75v-7A1.75 1.75 0 0 0 14.25 4H7.5a.25.25 0 0 1-.2-.1l-.9-1.2C6.07 2.26 5.55 2 5 2H1.75Z"/>
+                </svg>
+                <svg class="fm-icon-front" viewBox="0 0 16 16" width="18" height="18" fill="currentColor">
+                  <path d="M.75 4.5h14.5L14 13.5a1 1 0 0 1-.99.875H2.99A1 1 0 0 1 2 13.5L.75 4.5Z"/>
+                </svg>
+              </span>
+              <span class="fm-name">{cat.name}</span>
             </span>
-            <div class="folder-info">
-              <span class="folder-name">{cat.name}</span>
-              <span class="folder-count">{cat.length}</span>
-            </div>
+            <span class="fm-cell fm-cell-items">
+              <span class="fm-count">{cat.length}</span>
+              <span class="fm-count-label">{cat.length === 1 ? 'item' : 'items'}</span>
+            </span>
+            <span class="fm-cell fm-cell-modified">
+              {cat.modified ? (
+                <time datetime={cat.modified.toISOString()}>{formatDate(cat.modified)}</time>
+              ) : (
+                <span class="fm-modified-empty">—</span>
+              )}
+            </span>
           </a>
         </li>
       ))}
     </ul>
+
+    <footer class="fm-statusbar">
+      <span>{categories.length} {categories.length === 1 ? 'folder' : 'folders'}</span>
+      <span class="fm-statusbar-sep">·</span>
+      <span>{posts.length} {posts.length === 1 ? 'post' : 'posts'} total</span>
+    </footer>
   </section>
 </BaseLayout>

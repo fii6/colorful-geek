@@ -31,7 +31,7 @@ const strings = {
     },
     archive: { title: '归档', count: '篇文章' },
     tags: { title: '标签', count: '篇' },
-    categories: { title: '分类' },
+    categories: { title: '分类', col_name: '名称', col_items: '文章数', col_modified: '最近更新' },
     pagination: { prev: '上一页', next: '下一页' },
     error: {
       '404': { title: '404 — 页面未找到', message: '请求的路径不存在', home: 'cd ~' },
@@ -79,7 +79,7 @@ const strings = {
     },
     archive: { title: 'archives', count: 'posts' },
     tags: { title: 'tags', count: 'posts' },
-    categories: { title: 'categories' },
+    categories: { title: 'categories', col_name: 'Name', col_items: 'Items', col_modified: 'Modified' },
     pagination: { prev: 'prev', next: 'next' },
     error: {
       '404': { title: '404 — not found', message: 'the requested path does not exist', home: 'cd ~' },
