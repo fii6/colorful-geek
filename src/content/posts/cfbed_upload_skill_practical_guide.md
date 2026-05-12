@@ -4,10 +4,8 @@ date: 2026-03-09 15:18:00
 categories: OpenClaw
 tags:
   - openclaw
-  - skill
   - 图床
-  - hexo
-  - workflow
+  - 写作流
 description: "从安装、配置到验证，完整打通 CFBed Upload Skill 与 Hexo 写作流。"
 cover: "https://myimgbed.pages.dev/file/cfbed-flow.svg"
 top_img: "https://myimgbed.pages.dev/file/cfbed-terminal-verify.svg"
