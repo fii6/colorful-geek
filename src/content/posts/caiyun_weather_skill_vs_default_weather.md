@@ -6,9 +6,7 @@ categories:
 tags:
   - openclaw
   - weather
-  - skill
-  - caiyun
-  - china
+  - 彩云天气
 description: "围绕 fii6/caiyun-weather-skill，讲清楚它为什么在中国场景下比 OpenClaw 默认 weather skill 更贴近日常使用。"
 cover: "https://myimgbed.pages.dev/file/caiyun-weather-hero-20260325.svg"
 top_img: "https://myimgbed.pages.dev/file/caiyun-weather-compare-20260325.svg"
