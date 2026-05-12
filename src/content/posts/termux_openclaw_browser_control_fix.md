@@ -1,5 +1,5 @@
 ---
-title: "Termux OpenClaw 报 'No supported browser found'：一个被反复重装坑过的故障"
+title: "解决 Termux OpenClaw 浏览器控制问题"
 date: 2026-03-08 09:32:00
 categories:
   - OpenClaw
@@ -7,7 +7,6 @@ tags:
   - openclaw
   - termux
   - browser control
-  - troubleshooting
 description: "在 Termux 上用 OpenClaw Browser Control 报 'No supported browser found'？别急着重装 Chromium。这篇文章把这个故障拆成一个可复用的诊断模型——三段切分、显式声明、信号验收——让你下次遇到任何 '装好了但没被发现' 的问题都能少走两小时弯路。"
 cover: "https://myimgbed.pages.dev/file/termux-browser-terminal-error.svg"
 top_img: "https://myimgbed.pages.dev/file/termux-browser-before-after.svg"
