@@ -8,8 +8,7 @@ tags:
   - termux
   - browser control
 description: "在 Termux 上用 OpenClaw Browser Control 报 'No supported browser found'？别急着重装 Chromium。这篇文章把这个故障拆成一个可复用的诊断模型——三段切分、显式声明、信号验收——让你下次遇到任何 '装好了但没被发现' 的问题都能少走两小时弯路。"
-cover: "https://myimgbed.pages.dev/file/termux-browser-terminal-error.svg"
-top_img: "https://myimgbed.pages.dev/file/termux-browser-before-after.svg"
+cover: "https://myimgbed.pages.dev/file/1778672799383_file_0000000051dc722fae8b1af0e3bb37ff.png"
 ---
 
 > 如果你已经 `pkg install chromium` 第三遍了，先停一下——大概率不是浏览器的问题。
