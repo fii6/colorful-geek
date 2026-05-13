@@ -9,8 +9,7 @@ tags:
   - hexo
   - 写作流
 description: "这篇文章讲清楚如何让 OpenClaw 从起草、改稿、补 front-matter 到本地预览、SSH 检查和最终推送，推进一篇 Hexo 文章进入可发布状态。"
-cover: "https://myimgbed.pages.dev/file/hexo-skill-flow-20260320.svg"
-top_img: "https://myimgbed.pages.dev/file/hexo-skill-structure-20260320.svg"
+cover: "https://myimgbed.pages.dev/file/1778672532760_file_00000000165071f59fd380db5fceb90a.png"
 published: true
 ---
 
