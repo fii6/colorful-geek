@@ -99,15 +99,17 @@ export const themeConfig = {
     toggle: true,
     font_mono: '"JetBrains Mono", "Fira Code", "SFMono-Regular", "Menlo", "Consolas", monospace',
     font_sans: '"Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif',
+    title_font_family:
+      '"LXGW WenKai", "霞鹜文楷", "Microsoft YaHei", "微软雅黑", "PingFang SC", "Hiragino Sans GB", sans-serif',
     accent: '#58a6ff',
     theme_color: '#0d1117',
     title_separator: ' · ',
-    article_font_url: '',
+    article_font_url: 'https://cdn.jsdelivr.net/npm/lxgw-wenkai-webfont@1.7.0/style.css',
     article_font_family:
       '"Microsoft YaHei", "微软雅黑", "PingFang SC", "Hiragino Sans GB", sans-serif',
   },
 
-  custom_css: [],
+  custom_css: ['https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css'],
   custom_js: [],
 
   footer: {

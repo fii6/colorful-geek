@@ -146,6 +146,7 @@
                "Helvetica Neue", Arial, sans-serif;
   --font-article: "Microsoft YaHei", "微软雅黑", "PingFang SC",
                   "Hiragino Sans GB", var(--font-sans);
+  --font-post-title: "LXGW WenKai", "霞鹜文楷", var(--font-article);
 
   --radius-window: 10px;
   --radius-base: 6px;
@@ -641,7 +642,7 @@ button:hover { background: var(--bg-muted); }
   margin: 0 0 12px;
   font-size: 19px;
   line-height: 1.35;
-  font-family: var(--font-article);
+  font-family: var(--font-post-title);
   font-weight: 700;
   display: -webkit-box;
   -webkit-line-clamp: 2;
@@ -722,7 +723,7 @@ button:hover { background: var(--bg-muted); }
 
 .post-title {
   margin: 4px 0 14px;
-  font-family: var(--font-article);
+  font-family: var(--font-post-title);
   font-size: 30px;
   line-height: 1.25;
   font-weight: 800;
@@ -811,20 +812,21 @@ button:hover { background: var(--bg-muted); }
 .post-body li > ol { margin: 0.3em 0; }
 .post-body ol li::marker { color: var(--syn-number); font-weight: 700; }
 
-/* Custom unordered-list bullet: hollow ring with a dot inside (accent color) */
-.post-body ul { list-style: none; padding-left: 1.6em; }
+/* Custom unordered-list bullet: Font Awesome fa-solid fa-record-vinyl */
+.post-body ul { list-style: none; padding-left: 1.8em; }
 .post-body ul li { position: relative; }
 .post-body ul li::before {
-  content: "";
+  content: "\f8d9";
   position: absolute;
-  left: -1.35em;
-  top: 0.58em;
-  width: 11px;
-  height: 11px;
-  border: 1.5px solid var(--accent-fg);
-  border-radius: 50%;
-  background: radial-gradient(circle, var(--accent-fg) 0 2px, transparent 2.4px);
-  box-sizing: border-box;
+  left: -1.55em;
+  top: 0.42em;
+  width: 1em;
+  font-family: "Font Awesome 6 Free";
+  font-size: 0.78em;
+  font-weight: 900;
+  line-height: 1;
+  color: var(--accent-fg);
+  text-align: center;
 }
 
 .post-body blockquote {

@@ -35,6 +35,12 @@ const overrides: string[] = [];
 if (ap.accent) overrides.push(`--accent-fg:${ap.accent};--accent-emphasis:${ap.accent};`);
 if (ap.font_mono) overrides.push(`--font-mono:${ap.font_mono};`);
 if (ap.font_sans) overrides.push(`--font-sans:${ap.font_sans};`);
+if (ap.title_font_family) {
+  const stack = ap.title_font_family.includes(',')
+    ? ap.title_font_family
+    : `${ap.title_font_family},${ap.font_sans || 'sans-serif'}`;
+  overrides.push(`--font-post-title:${stack};`);
+}
 if (ap.article_font_family) {
   const stack = ap.article_font_family.includes(',')
     ? ap.article_font_family
