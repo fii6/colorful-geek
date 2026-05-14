@@ -897,7 +897,9 @@ button:hover { background: var(--bg-muted); }
 }
 
 .post-body table {
+  display: block;
   width: 100%;
+  max-width: 100%;
   border-collapse: collapse;
   font-size: 13.5px;
   margin: 1.4em 0;
@@ -905,7 +907,8 @@ button:hover { background: var(--bg-muted); }
   background: var(--bg-default);
   border: 1px solid var(--border-default);
   border-radius: var(--radius-base);
-  overflow: hidden;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
 }
 .post-body table th,
 .post-body table td {
@@ -913,6 +916,8 @@ button:hover { background: var(--bg-muted); }
   border-bottom: 1px solid var(--border-muted);
   text-align: left;
   vertical-align: top;
+  overflow-wrap: anywhere;
+  word-break: break-word;
 }
 .post-body table th {
   background: var(--bg-muted);
