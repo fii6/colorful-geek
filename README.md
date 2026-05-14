@@ -2,6 +2,8 @@
 
 GitHub Dark terminal-style blog, ported from the Hexo theme `colorful-geek` to Astro 5.
 
+**Live demo:** <https://colorful-geek.pages.dev/>
+
 ## Quick start
 
 ```bash
