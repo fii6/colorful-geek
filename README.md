@@ -99,3 +99,22 @@ Static pages live under `src/content/pages/*.md`.
 | `layout/tags.ejs`                   | `src/pages/tags/index.astro`             |
 | `layout/links.ejs`                  | `src/pages/links.astro`                  |
 | `layout/404.ejs`                    | `src/pages/404.astro`                    |
+
+---
+
+## 推广 · Linux Do 社区
+
+<table>
+  <tr>
+    <td width="120" align="center">
+      <a href="https://linux.do" target="_blank" rel="noopener">
+        <img src="https://linux.do/uploads/default/optimized/3X/9/d/9dd49731091ce8656e94433a26a3ef36062b3994_2_180x180.png" width="96" alt="Linux Do" />
+      </a>
+    </td>
+    <td>
+      <a href="https://linux.do" target="_blank" rel="noopener"><b>Linux Do 社区</b></a><br/>
+      真诚、友善、团结的技术社区。一群热爱开源、热爱折腾的朋友聚在一起,聊技术、聊生活,也聊未来。<br/>
+      <sub>👉 <a href="https://linux.do" target="_blank" rel="noopener">https://linux.do</a></sub>
+    </td>
+  </tr>
+</table>

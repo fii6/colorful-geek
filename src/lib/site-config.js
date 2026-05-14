@@ -109,7 +109,10 @@ export const themeConfig = {
       '"Microsoft YaHei", "微软雅黑", "PingFang SC", "Hiragino Sans GB", sans-serif',
   },
 
-  custom_css: ['https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css'],
+  custom_css: [
+    'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css',
+    'https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css',
+  ],
   custom_js: [],
 
   footer: {

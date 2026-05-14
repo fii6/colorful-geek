@@ -7,8 +7,28 @@ import { pluginLineNumbers } from '@expressive-code/plugin-line-numbers';
 import rehypeSlug from 'rehype-slug';
 import rehypeAutolinkHeadings from 'rehype-autolink-headings';
 import remarkGithubBlockquoteAlert from 'remark-github-blockquote-alert';
+import remarkMath from 'remark-math';
+import rehypeKatex from 'rehype-katex';
 import { siteConfig } from './src/lib/site-config.js';
 import { pluginCustomCopyButton } from './src/plugins/expressive-code/custom-copy-button.ts';
+
+function remarkMermaidBlock() {
+  const escape = (s) =>
+    String(s || '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+  const walk = (node) => {
+    const kids = node && node.children;
+    if (!Array.isArray(kids)) return;
+    for (let i = 0; i < kids.length; i++) {
+      const c = kids[i];
+      if (c && c.type === 'code' && c.lang === 'mermaid') {
+        kids[i] = { type: 'html', value: `<div class="mermaid">${escape(c.value)}</div>` };
+      } else {
+        walk(c);
+      }
+    }
+  };
+  return (tree) => walk(tree);
+}
 
 export default defineConfig({
   site: siteConfig.url,
@@ -62,7 +82,7 @@ export default defineConfig({
     sitemap(),
   ],
   markdown: {
-    remarkPlugins: [remarkGithubBlockquoteAlert],
+    remarkPlugins: [remarkMermaidBlock, remarkGithubBlockquoteAlert, remarkMath],
     rehypePlugins: [
       rehypeSlug,
       [
@@ -72,6 +92,7 @@ export default defineConfig({
           properties: { className: ['headerlink'], ariaHidden: 'true', tabIndex: -1 },
         },
       ],
+      rehypeKatex,
     ],
   },
 });

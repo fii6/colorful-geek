@@ -810,7 +810,25 @@ button:hover { background: var(--bg-muted); }
 .post-body li > p { margin: 0.35em 0; }
 .post-body li > ul,
 .post-body li > ol { margin: 0.3em 0; }
-.post-body ol li::marker { color: var(--syn-number); font-weight: 700; }
+/* GitHub-style ordered-list marker: blue solid circle with white number */
+.post-body ol { list-style: none; padding-left: 2.2em; counter-reset: post-ol; }
+.post-body ol li { position: relative; counter-increment: post-ol; }
+.post-body ol li::before {
+  content: counter(post-ol);
+  position: absolute;
+  left: -1.95em;
+  top: 0.28em;
+  width: 1.45em;
+  height: 1.45em;
+  border-radius: 50%;
+  background: var(--accent-fg);
+  color: #ffffff;
+  font-family: var(--font-sans);
+  font-size: 0.78em;
+  font-weight: 700;
+  line-height: 1.45em;
+  text-align: center;
+}
 
 /* Custom unordered-list bullet: Font Awesome fa-solid fa-record-vinyl */
 .post-body ul { list-style: none; padding-left: 1.8em; }
@@ -829,11 +847,42 @@ button:hover { background: var(--bg-muted); }
   text-align: center;
 }
 
+.post-body ul.contains-task-list { padding-left: 1.6em; }
+.post-body ul.contains-task-list .contains-task-list { padding-left: 1.4em; }
+.post-body li.task-list-item { padding-left: 0; }
+.post-body li.task-list-item::before { content: none; }
+.post-body li.task-list-item > input[type="checkbox"] {
+  appearance: none;
+  -webkit-appearance: none;
+  width: 1em;
+  height: 1em;
+  margin: 0 0.5em 0 -1.55em;
+  vertical-align: -0.15em;
+  border: 1px solid var(--border-default);
+  border-radius: 3px;
+  background: var(--bg-subtle);
+  display: inline-grid;
+  place-content: center;
+  cursor: default;
+}
+.post-body li.task-list-item > input[type="checkbox"]:checked {
+  background: var(--success-fg);
+  border-color: var(--success-fg);
+}
+.post-body li.task-list-item > input[type="checkbox"]:checked::before {
+  content: "\f00c";
+  font-family: "Font Awesome 6 Free";
+  font-weight: 900;
+  color: #fff;
+  font-size: 0.72em;
+  line-height: 1;
+}
+
 .post-body blockquote {
   margin: 1.4em 0;
   padding: 10px 18px;
   border-left: 3px solid var(--accent-fg);
-  background: var(--bg-default);
+  background: color-mix(in srgb, var(--accent-fg) 10%, var(--bg-default));
   color: var(--fg-muted);
   border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
 }
@@ -924,6 +973,35 @@ button:hover { background: var(--bg-muted); }
 .post-body h4 > a.headerlink:hover,
 .post-body h5 > a.headerlink:hover,
 .post-body h6 > a.headerlink:hover { color: var(--accent-fg); }
+
+/* ─── Mermaid diagrams ───────────────────────────────────────────────── */
+.post-body .mermaid {
+  margin: 1.4em 0;
+  padding: 16px;
+  background: var(--bg-default);
+  border: 1px solid var(--border-default);
+  border-radius: var(--radius-base);
+  text-align: center;
+  overflow-x: auto;
+  min-height: 40px;
+}
+.post-body .mermaid:not([data-processed]) {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  color: var(--fg-muted);
+  white-space: pre-wrap;
+  text-align: left;
+}
+.post-body .mermaid svg { max-width: 100%; height: auto; }
+
+/* ─── KaTeX math ──────────────────────────────────────────────────────── */
+.post-body .katex-display {
+  margin: 1.4em 0;
+  overflow-x: auto;
+  overflow-y: hidden;
+  padding: 2px 0;
+}
+.post-body .katex { font-size: 1.05em; color: var(--fg-default); }
 
 /* ─── GitHub-style callouts (> [!NOTE/TIP/IMPORTANT/WARNING/CAUTION]) ─ */
 .post-body blockquote.callout {
