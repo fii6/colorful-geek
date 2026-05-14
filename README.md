@@ -102,7 +102,7 @@ Static pages live under `src/content/pages/*.md`.
 
 ---
 
-## 推广 · Linux Do 社区
+## · Linux Do 社区
 
 <table>
   <tr>
@@ -113,7 +113,7 @@ Static pages live under `src/content/pages/*.md`.
     </td>
     <td>
       <a href="https://linux.do" target="_blank" rel="noopener"><b>Linux Do 社区</b></a><br/>
-      真诚、友善、团结的技术社区。一群热爱开源、热爱折腾的朋友聚在一起,聊技术、聊生活,也聊未来。<br/>
+      真诚、友善、团结的技术社区。<br/>
       <sub>👉 <a href="https://linux.do" target="_blank" rel="noopener">https://linux.do</a></sub>
     </td>
   </tr>
